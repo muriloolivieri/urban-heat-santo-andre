@@ -51,21 +51,22 @@ All temperatures are Landsat **land surface temperatures** (°C), median composi
 | Dense vegetation, % of analysed area | 10.65% |
 
 ## Analysis 4 — Summers 2023–2026, official urban area (IBGE boundary)
-*Script: `scripts/04_summer2023-2026_ibge_boundary.js` · Pending*
+*Script: `scripts/04_summer2023-2026_ibge_boundary.js` · Run on 2026-09-28 · **Main result of the project so far***
 
 | Metric | Value |
 |---|---|
-| Images used | |
-| Pearson correlation (NDVI vs temperature) | |
-| p-value | |
-| r² | |
-| Mean temperature, low vegetation | |
-| Mean temperature, medium vegetation | |
-| Mean temperature, dense vegetation | |
-| Difference, low vs dense vegetation | |
-| Analysed area | |
-| Dense vegetation area | |
-| Dense vegetation, % of analysed area | |
+| Municipalities matched in IBGE dataset | 1 |
+| Images used | 36 |
+| Pearson correlation (NDVI vs temperature) | −0.705 |
+| p-value | 1.19 × 10⁻³⁰⁰ |
+| r² | ≈ 0.50 |
+| Mean temperature, low vegetation | 39.26 °C |
+| Mean temperature, medium vegetation | 38.33 °C |
+| Mean temperature, dense vegetation | 33.18 °C |
+| Difference, low vs dense vegetation | 6.09 °C |
+| Analysed area | 6,764.4 ha |
+| Dense vegetation area | 754.2 ha |
+| Dense vegetation, % of analysed area | 11.15% |
 
 ## Comparison
 
@@ -73,9 +74,11 @@ All temperatures are Landsat **land surface temperatures** (°C), median composi
 |---|---|---|---|---|
 | Period | Summers 2023–26 | 2026 | 2026 | Summers 2023–26 |
 | Area | Rectangle | Rectangle | Official urban | Official urban |
-| r | −0.74 | −0.56 | −0.55 | |
-| Low → medium vegetation | −1.23 °C | −0.66 °C | −0.59 °C | |
-| Medium → dense vegetation | −5.66 °C | −3.45 °C | −2.65 °C | |
-| Low → dense vegetation | −6.89 °C | −4.11 °C | −3.24 °C | |
+| r | −0.74 | −0.56 | −0.55 | −0.71 |
+| Low → medium vegetation | −1.23 °C | −0.66 °C | −0.59 °C | −0.93 °C |
+| Medium → dense vegetation | −5.66 °C | −3.45 °C | −2.65 °C | −5.15 °C |
+| Low → dense vegetation | −6.89 °C | −4.11 °C | −3.24 °C | −6.09 °C |
 
 **Consistent pattern:** in all analyses, most of the cooling happens between medium and dense vegetation, not between low and medium vegetation.
+
+**Seasonal effect (official urban area, Analyses 3 and 4):** the difference between low and dense vegetation is 6.1 °C in summer, almost twice the 3.2 °C observed over 2026, and NDVI explains about 50% of the variation in summer against about 30% over the year.
