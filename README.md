@@ -16,6 +16,7 @@ Which urban areas of Santo André have the highest land surface temperatures in 
 |---|---|---|
 | Landsat 8 and 9, Collection 2, Level 2 (`LANDSAT/LC08/C02/T1_L2`, `LANDSAT/LC09/C02/T1_L2`) | USGS / NASA, via Google Earth Engine | Land surface temperature (band `ST_B10`) and NDVI (bands `SR_B4`, `SR_B5`) |
 | Malha Municipal 2025, state of São Paulo (`SP_Municipios_2025`) | IBGE, Brazilian Institute of Geography and Statistics | Official municipal boundary of Santo André |
+| Neighbourhood boundaries with 2022 Census counts (`BR_bairros_CD2022`) | IBGE, 2022 Census | Neighbourhood limits and number of residents (`v0001`) |
 
 ## Methods
 
@@ -24,6 +25,12 @@ Which urban areas of Santo André have the highest land surface temperatures in 
 3. **Composites.** A median composite was calculated for each period analysed (summer months 2023–2026, and the year 2026).
 4. **Sampling and statistics.** 2,000 random 30 m pixels were sampled (fixed seed = 42). For each sample, the Pearson correlation between NDVI and land surface temperature was calculated, as well as the mean temperature in three vegetation classes: low (NDVI 0–0.2), medium (0.2–0.6) and dense (≥ 0.6). Water pixels (NDVI < 0) were excluded from the class means.
 5. **Validation of dense vegetation areas.** Pixels with NDVI ≥ 0.6 were mapped over a satellite basemap and inspected visually to check whether they correspond to urban parks or to forest outside the city.
+6. **Neighbourhood analysis.** For each of the 113 IBGE neighbourhoods of Santo André, the mean summer land surface temperature, mean NDVI and share of dense vegetation were calculated. The 87 urban neighbourhoods (centre inside the northern urban area) were ranked by temperature and combined with the number of residents from the 2022 Census.
+
+## Why it matters
+
+- Heat is a public health problem in Brazil: a national study by Fiocruz and UFBA (June 2026) associated about 120,000 deaths between 2000 and 2019 with heat waves, with children, older adults and socially vulnerable people most affected ([Agência Brasil](https://agenciabrasil.ebc.com.br/radioagencia-nacional/meio-ambiente/audio/2026-06/calor-extremo-e-ligado-120-mil-mortes-no-pais)).
+- Santo André's Civil Defence created a citizen climate monitoring network to capture microclimates inside the city; between January and July 2026 it recorded differences of up to 7.5 °C in mean temperature between monitored points ([Diário do Grande ABC](https://www.dgabc.com.br/Noticia/4343965/santo-andre-tem-diferenca-de-7-5%C2%B0c-de-temperatura)).
 
 ## Main results so far
 
@@ -38,10 +45,22 @@ Temperatures are **land surface temperatures** at the time of the Landsat overpa
 
 **Key findings**
 
+- **About 154,000 people, more than one in five residents of the urban area, live in the hottest 25% of neighbourhoods** (mean summer surface temperature ≥ 39.5 °C), where dense vegetation covers only 0–5% of the neighbourhood.
+- Between urban neighbourhoods, mean summer surface temperature ranges from 34.1 °C (Vila Guaraciaba, 39% dense vegetation) to 40.8 °C (Vila Lucinda, 1% dense vegetation), a difference of 6.7 °C. Across urban neighbourhoods, NDVI explains about 70% of the variation in temperature (r = −0.83).
 - **In summer, areas of Santo André with dense vegetation are on average about 6 °C cooler at the surface than areas with little vegetation** (official urban area, summers 2023–2026).
 - The effect is strongest when heat is most dangerous: in summer, NDVI explains about 50% of the variation in surface temperature (r = −0.71, p < 0.001), against about 30% over 2026 (r = −0.55), and the temperature difference is almost twice as large (6.1 °C vs 3.2 °C).
 - **Dense vegetation matters most.** In all four analyses, moving from low to medium vegetation lowered the mean temperature by only about 0.6–1.2 °C, while moving from medium to dense vegetation lowered it by about 2.7–5.7 °C.
 - Dense vegetation covers only about 11% (≈ 720–750 ha) of the analysed urban area, and it corresponds mainly to parks and well-vegetated areas within the city.
+
+**Neighbourhoods with the most residents among the hottest 25%** (candidate priorities for tree planting; full tables in [`results/results.md`](results/results.md)):
+
+| Neighbourhood | Surface temp. (°C) | Dense vegetation | Residents (2022) |
+|---|---|---|---|
+| Parque João Ramalho | 39.5 | 1% | 17,735 |
+| Parque Capuava | 39.5 | 5% | 13,414 |
+| Vila Palmares | 39.6 | 0% | 12,968 |
+| Parque Oratório | 40.2 | 1% | 11,886 |
+| Jardim Santa Cristina | 40.2 | 0% | 10,148 |
 
 ## Limitations
 
@@ -51,11 +70,13 @@ Temperatures are **land surface temperatures** at the time of the Landsat overpa
 - Neighbouring pixels are not fully independent (spatial autocorrelation), which makes p-values look stronger than they would be for independent observations.
 - The correlation was calculated using all sampled pixels, including a few water pixels (NDVI < 0), which were only excluded from the class means.
 - The 2026 analysis covers January to September only, so it contains more cool-season images than a full year would.
+- IBGE neighbourhood boundaries may differ from the names and limits residents use. One urban neighbourhood (the Capuava petrochemical complex) has no population data in the Census file (IBGE code "."); it was kept in the temperature ranking and left out of population totals.
+- Differences of a few tenths of a degree between neighbourhoods are within the uncertainty of the satellite measurement, so the hottest neighbourhoods should be read as a group rather than as an exact order.
 
 ## How to reproduce
 
 1. Create a free, non-commercial Google Earth Engine account at [earthengine.google.com](https://earthengine.google.com).
-2. For scripts 03 and 04, download `SP_Municipios_2025.zip` from the [IBGE download server](https://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2025/UFs/SP/), upload it as a table asset in the Earth Engine Code Editor (Assets → New → Shape files), and replace the asset path at the top of the script.
+2. For scripts 03 and 04, download `SP_Municipios_2025.zip` from the [IBGE download server](https://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2025/UFs/SP/), upload it as a table asset in the Earth Engine Code Editor (Assets → New → Shape files), and replace the asset path at the top of the script. For scripts 05 and 06, do the same with `BR_bairros_CD2022.zip` from the [IBGE 2022 Census server](https://ftp.ibge.gov.br/Censos/Censo_Demografico_2022/Agregados_por_Setores_Censitarios/malha_com_atributos/bairros/shp/BR/).
 3. Paste a script from the [`scripts`](scripts) folder into the [Code Editor](https://code.earthengine.google.com) and click **Run**.
 
 ## Repository structure
@@ -65,7 +86,10 @@ scripts/
   01_summer2023-2026_rectangle.js      first exploratory analysis
   02_year2026_rectangle.js             year 2026 + dense vegetation map
   03_year2026_ibge_boundary.js         year 2026, official urban area (current)
-  04_summer2023-2026_ibge_boundary.js  summers, official urban area (current)
+  04_summer2023-2026_ibge_boundary.js  summers, official urban area
+  05_neighbourhood_ranking_summer.js   all 113 neighbourhoods, summer ranking
+  06_urban_neighbourhood_ranking_population.js
+                                       87 urban neighbourhoods + population (current)
 results/
   results.md                           full numerical results
 research-log/
@@ -74,14 +98,15 @@ research-log/
 
 ## Next steps
 
-- Calculate the mean temperature of each neighbourhood and rank the hottest ones.
+- Ask Santo André's Civil Defence about access to air temperature data from its citizen monitoring network, to compare with the satellite results.
+- Look for data on older adults and children by neighbourhood, to identify where heat and vulnerability overlap.
 - Install low-cost air temperature sensors in different neighbourhoods during the 2026–2027 summer and compare them with the satellite data.
 - Measure surface temperatures of different materials (asphalt, concrete, grass, tree shade) with an infrared thermometer.
-- Produce a priority map for urban tree planting and share it with the city government.
+- Turn the neighbourhood ranking into a priority map for urban tree planting and share it with the city government.
 
 ## Author
 
-*[Murilo Pinho Olivieri]* — independent student research project, Santo André, Brazil.
+**Murilo Pinho Olivieri** — independent student research project, Santo André, Brazil.
 
 ## License
 
