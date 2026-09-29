@@ -31,17 +31,17 @@ Which urban areas of Santo André have the highest land surface temperatures in 
 |---|---|---|---|---|---|---|
 | Summers 2023–2026, rectangle | 49 | −0.74 | 39.3 °C | 38.1 °C | 32.4 °C | 6.9 °C |
 | Year 2026, rectangle | 30 | −0.56 | 28.5 °C | 27.9 °C | 24.4 °C | 4.1 °C |
-| **Year 2026, official urban area** | **26** | **−0.55** | **28.3 °C** | **27.7 °C** | **25.0 °C** | **3.2 °C** |
-| Summers 2023–2026, official urban area | — | — | — | — | — | *pending* |
+| Year 2026, official urban area | 26 | −0.55 | 28.3 °C | 27.7 °C | 25.0 °C | 3.2 °C |
+| **Summers 2023–2026, official urban area** | **36** | **−0.71** | **39.3 °C** | **38.3 °C** | **33.2 °C** | **6.1 °C** |
 
 Temperatures are **land surface temperatures** at the time of the Landsat overpass (around 10 a.m. local time). Full results are in [`results/results.md`](results/results.md).
 
 **Key findings**
 
-- Vegetation is strongly associated with lower surface temperatures. In the official urban area in 2026, NDVI explains about 30% of the variation in surface temperature (r = −0.55, p < 0.001).
-- The effect is much stronger in summer: in the first analysis, the difference between low and dense vegetation areas was almost 7 °C in summer, against about 4 °C over the whole year.
-- **Dense vegetation matters most.** In every analysis, moving from low to medium vegetation lowered the mean temperature by only about 0.6–1.2 °C, while moving from medium to dense vegetation lowered it by about 2.7–5.7 °C.
-- Dense vegetation covers only about 10.7% (≈ 721 ha) of the analysed urban area, and it corresponds mainly to parks and well-vegetated areas within the city.
+- **In summer, areas of Santo André with dense vegetation are on average about 6 °C cooler at the surface than areas with little vegetation** (official urban area, summers 2023–2026).
+- The effect is strongest when heat is most dangerous: in summer, NDVI explains about 50% of the variation in surface temperature (r = −0.71, p < 0.001), against about 30% over 2026 (r = −0.55), and the temperature difference is almost twice as large (6.1 °C vs 3.2 °C).
+- **Dense vegetation matters most.** In all four analyses, moving from low to medium vegetation lowered the mean temperature by only about 0.6–1.2 °C, while moving from medium to dense vegetation lowered it by about 2.7–5.7 °C.
+- Dense vegetation covers only about 11% (≈ 720–750 ha) of the analysed urban area, and it corresponds mainly to parks and well-vegetated areas within the city.
 
 ## Limitations
 
@@ -74,7 +74,6 @@ research-log/
 
 ## Next steps
 
-- Run the summer analysis with the official boundary (script 04).
 - Calculate the mean temperature of each neighbourhood and rank the hottest ones.
 - Install low-cost air temperature sensors in different neighbourhoods during the 2026–2027 summer and compare them with the satellite data.
 - Measure surface temperatures of different materials (asphalt, concrete, grass, tree shade) with an infrared thermometer.
