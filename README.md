@@ -82,7 +82,7 @@ research-log/
 
 ## Author
 
-*[Your name]* — independent student research project, Santo André, Brazil.
+*[Murilo Pinho Olivieri]* — independent student research project, Santo André, Brazil.
 
 ## License
 
