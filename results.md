@@ -82,3 +82,95 @@ All temperatures are Landsat **land surface temperatures** (°C), median composi
 **Consistent pattern:** in all analyses, most of the cooling happens between medium and dense vegetation, not between low and medium vegetation.
 
 **Seasonal effect (official urban area, Analyses 3 and 4):** the difference between low and dense vegetation is 6.1 °C in summer, almost twice the 3.2 °C observed over 2026, and NDVI explains about 50% of the variation in summer against about 30% over the year.
+
+---
+
+## Analysis 5 — All 113 neighbourhoods, summers 2023–2026
+*Script: `scripts/05_neighbourhood_ranking_summer.js` · Run on 2026-09-29 · Superseded by Analysis 6*
+
+IBGE 2022 Census neighbourhood boundaries; mean values per neighbourhood; 49 images.
+
+The hottest neighbourhood was Vila Lucinda (≈ 40.8 °C). The 10 coolest were all in the forested water-protection area in the south of the municipality:
+
+| Neighbourhood | Surface temp. (°C) | Mean NDVI | Dense vegetation (%) | Area (km²) |
+|---|---|---|---|---|
+| Rio Grande | 26.5 | 0.87 | 100 | 11.04 |
+| Araçaúva | 26.8 | 0.87 | 100 | 4.77 |
+| Waisberg II | 27.4 | 0.85 | 99 | 1.84 |
+| Sítio dos Teco | 27.4 | 0.84 | 98 | 0.70 |
+| Jardim Joaquim Eugênio de Lima | 27.8 | 0.86 | 100 | 5.61 |
+| Parque do Pedroso | 28.0 | 0.83 | 97 | 8.87 |
+| Três Divisas | 28.0 | 0.84 | 97 | 1.01 |
+| Rio Bonito | 28.1 | 0.86 | 100 | 5.41 |
+| Sítio Taquaral | 28.3 | 0.78 | 94 | 0.58 |
+| Waisberg I | 28.4 | 0.84 | 100 | 0.13 |
+
+Because these are forest areas, Analysis 6 repeats the ranking using urban neighbourhoods only.
+
+## Analysis 6 — 87 urban neighbourhoods + population, summers 2023–2026
+*Script: `scripts/06_urban_neighbourhood_ranking_population.js` · Run on 2026-09-29 · **Current neighbourhood analysis***
+
+Urban neighbourhoods = neighbourhoods whose centre lies inside the northern urban area used in Analyses 3 and 4. Population = residents in the 2022 Census (`v0001`). 49 images.
+
+| Metric | Value |
+|---|---|
+| Neighbourhoods in Santo André / urban neighbourhoods analysed | 113 / 87 |
+| Correlation across urban neighbourhoods (mean NDVI vs mean temperature) | −0.833 |
+| p-value | 1.47 × 10⁻²³ |
+| r² | ≈ 0.69 |
+| Hottest urban neighbourhood | Vila Lucinda, 40.8 °C |
+| Coolest urban neighbourhood | Vila Guaraciaba, 34.1 °C |
+| Difference | 6.7 °C |
+| Threshold for the hottest 25% | 39.5 °C |
+| Neighbourhoods in the hottest 25% | 22 |
+| Residents in the hottest 25% | 153,695 |
+| Residents in all urban neighbourhoods analysed | 712,855 |
+| Share of urban residents in the hottest 25% | ≈ 21.6% |
+| Urban neighbourhoods without population data | 1 (Pólo Petroquímico de Capuava) |
+
+### 10 hottest urban neighbourhoods
+
+| Neighbourhood | Surface temp. (°C) | Mean NDVI | Dense vegetation (%) | Residents | Residents per km² |
+|---|---|---|---|---|---|
+| Vila Lucinda | 40.8 | 0.22 | 1 | 7,292 | 12,183 |
+| Novo Homero Thon | 40.4 | 0.26 | 4 | 4,356 | 2,835 |
+| Vila Guarani | 40.3 | 0.25 | 2 | 3,261 | 12,844 |
+| Jardim Guarará | 40.3 | 0.24 | 0 | 5,486 | 13,851 |
+| Parque Oratório | 40.2 | 0.20 | 1 | 11,886 | 11,159 |
+| Vila Scarpelli | 40.2 | 0.21 | 1 | 7,307 | 12,283 |
+| Jardim Santa Cristina | 40.2 | 0.21 | 0 | 10,148 | 28,577 |
+| Jardim Bom Pastor | 40.0 | 0.25 | 5 | 5,563 | 8,066 |
+| Centreville | 40.0 | 0.20 | 0 | 5,138 | 17,782 |
+| Jardim Santo Antônio | 39.9 | 0.20 | 0 | 8,956 | 11,315 |
+
+### 10 coolest urban neighbourhoods
+
+| Neighbourhood | Surface temp. (°C) | Mean NDVI | Dense vegetation (%) | Residents | Residents per km² |
+|---|---|---|---|---|---|
+| Vila Guaraciaba | 34.1 | 0.48 | 39 | 5,664 | 5,835 |
+| Jardim Santo André CDHU | 35.0 | 0.46 | 31 | 27,028 | 17,512 |
+| Cidade São Jorge | 35.1 | 0.44 | 33 | 13,149 | 8,919 |
+| Jardim Cipreste | 35.2 | 0.43 | 26 | 7,311 | 16,349 |
+| Condomínio Maracanã | 36.0 | 0.37 | 18 | 12,435 | 14,706 |
+| Jardim Las Vegas | 36.0 | 0.45 | 36 | 11,978 | 10,030 |
+| Jardim Alzira Franco | 36.1 | 0.41 | 24 | 7,602 | 9,423 |
+| Vila Bastos | 36.4 | 0.28 | 1 | 4,441 | 13,663 |
+| Pólo Petroquímico de Capuava | 36.4 | 0.42 | 24 | — | — |
+| Paraíso | 36.5 | 0.47 | 38 | 3,426 | 4,263 |
+
+### Hottest 25%: the 10 neighbourhoods with the most residents (candidate priorities)
+
+| Neighbourhood | Surface temp. (°C) | Mean NDVI | Dense vegetation (%) | Residents | Residents per km² |
+|---|---|---|---|---|---|
+| Parque João Ramalho | 39.5 | 0.22 | 1 | 17,735 | 18,029 |
+| Parque Capuava | 39.5 | 0.27 | 5 | 13,414 | 14,907 |
+| Vila Palmares | 39.6 | 0.20 | 0 | 12,968 | 14,463 |
+| Parque Oratório | 40.2 | 0.20 | 1 | 11,886 | 11,159 |
+| Jardim Santa Cristina | 40.2 | 0.21 | 0 | 10,148 | 28,577 |
+| Jardim Santo Antônio | 39.9 | 0.20 | 0 | 8,956 | 11,315 |
+| Vila Scarpelli | 40.2 | 0.21 | 1 | 7,307 | 12,283 |
+| Vila Lucinda | 40.8 | 0.22 | 1 | 7,292 | 12,183 |
+| Vila Sacadura Cabral | 39.7 | 0.20 | 0 | 6,615 | 14,548 |
+| Jardim Santo Alberto | 39.8 | 0.22 | 2 | 6,154 | 12,967 |
+
+**Notes.** Differences of a few tenths of a degree are within measurement uncertainty. Temperatures are land surface temperatures at about 10 a.m. Neighbourhood limits follow IBGE and may differ from local usage.
