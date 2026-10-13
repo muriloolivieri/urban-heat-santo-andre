@@ -73,3 +73,21 @@ Problem identified: the rectangle includes parts of neighbouring municipalities 
 **Next steps:** update the repository; contact the Civil Defence (with my teacher) about the monitoring network data; literature review; look for age data (older adults, children) by neighbourhood.
 
 ---
+
+## 2026-10-13
+
+**Machine learning dataset.** Wrote script 07 to export 7,956 random pixels of the urban area (summers 2023–2026, 36 images, water removed) with temperature and seven features, including tree cover and built-up cover from ESA WorldCover, which separates trees from grass. Exported it as a CSV to Google Drive.
+
+**Model (Google Colab notebook).** Worked through the notebook exercise by exercise, learning the pandas and scikit-learn steps along the way.
+- Correlations: built-up cover (+0.78) and tree cover (−0.77) have the strongest relationships with temperature; tree cover is stronger than NDVI (−0.72). Albedo was almost unrelated (+0.13), which was surprising.
+- Linear regression: R² went from 0.40 (NDVI only) to 0.62 (all features). My guess that R² would increase was right.
+- Random forest: R² = 0.65 with spatial cross-validation, only slightly better than linear regression. With random cross-validation it was 0.75. *Lesson:* nearby pixels are very similar, so random cross-validation makes the model look about 10 percentage points better than it really is.
+- Permutation importance: built-up cover was by far the most important (0.415); elevation was second, because no other feature knows the height of the terrain. NDVI was almost last, because tree cover and built-up cover carry the same information.
+- Partial dependence: holding everything else constant, 50% tree cover is only about 0.3 °C cooler than 0%. This is much smaller than the ~6 °C found earlier, because in reality more trees come with less built-up cover. *Implication:* planting trees over existing concrete may cool less than replacing concrete with vegetation.
+- Albedo: the model predicts warmer temperatures for more reflective surfaces, which goes against physics. It learned an association (trees and shade are dark and cool), not a cause.
+
+**Also:** translated all notebook answers and conclusions into English and published the notebook in `notebooks/`.
+
+**Next steps:** simulate replacing built-up cover with trees in the model; repeat permutation importance on all five folds; prepare the field measurements (infrared thermometer, sensors) for November.
+
+---
