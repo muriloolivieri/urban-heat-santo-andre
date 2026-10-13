@@ -174,3 +174,59 @@ Urban neighbourhoods = neighbourhoods whose centre lies inside the northern urba
 | Jardim Santo Alberto | 39.8 | 0.22 | 2 | 6,154 | 12,967 |
 
 **Notes.** Differences of a few tenths of a degree are within measurement uncertainty. Temperatures are land surface temperatures at about 10 a.m. Neighbourhood limits follow IBGE and may differ from local usage.
+
+---
+
+## Analysis 7 — Machine learning model, summers 2023–2026
+*Scripts: `scripts/07_ml_dataset_export.js` (dataset) and `notebooks/08_urban_heat_model.ipynb` (model) · Run on 2026-10-13*
+
+**Dataset:** 7,956 random 30 m pixels in the official urban area (water removed), 36 Landsat images. Target: summer land surface temperature (°C). Features: NDVI, NDBI, albedo, elevation, distance to the nearest dense vegetation (`dist_dense_m`), tree cover within 50 m and built-up cover within 50 m (ESA WorldCover 2021).
+
+### Correlation of each feature with temperature
+
+| Feature | Pearson r |
+|---|---|
+| Built-up cover within 50 m | +0.78 |
+| NDBI (built-up index) | +0.71 |
+| Distance to dense vegetation | +0.48 |
+| Albedo | +0.13 |
+| Elevation | −0.40 |
+| NDVI | −0.72 |
+| Tree cover within 50 m | −0.77 |
+
+Tree cover is more strongly related to temperature than NDVI, because NDVI also counts grass. The NDVI correlation (−0.72) is almost identical to the −0.71 of Analysis 4, which used a different sample.
+
+### Model comparison
+
+| Model | Cross-validation | R² | MAE (°C) |
+|---|---|---|---|
+| Linear regression, NDVI only | spatial | 0.40 | 1.54 |
+| Linear regression, all features | spatial | 0.62 | 1.23 |
+| **Random forest, all features** | **spatial** | **0.65** | **1.17** |
+| Random forest, all features | random (optimistic) | 0.75 | 1.10 |
+
+Spatial cross-validation: blocks of about 1 km, 5 folds; models are always tested on blocks they did not see during training. Random cross-validation overestimates R² by about 10 percentage points.
+
+### Permutation importance (random forest, one spatial fold)
+
+| Feature | Drop in R² when shuffled |
+|---|---|
+| Built-up cover within 50 m | 0.415 |
+| Elevation | 0.077 |
+| Tree cover within 50 m | 0.065 |
+| Distance to dense vegetation | 0.044 |
+| NDBI | 0.040 |
+| NDVI | 0.021 |
+| Albedo | 0.015 |
+
+Features that carry similar information (tree cover, built-up cover, NDVI) can replace each other, so this ranking shows which information is unique, not which factor matters most in the real world.
+
+### Partial dependence
+
+- **Tree cover:** predicted temperature falls from about 38.3 °C (0% tree cover) to about 38.0 °C (50%) and about 37.6 °C (100%), with the sharpest drop above about 85%. This holds built-up cover constant, so it is much smaller than the ~6 °C difference between low- and dense-vegetation areas, where both change together. 90% of pixels have less than one-third tree cover.
+- **NDVI:** almost flat; its information is already captured by tree cover and built-up cover.
+- **Albedo:** predicted temperature rises with albedo between 0.11 and 0.15, against physical expectations; likely because the darkest surfaces are trees and shade.
+
+### Conclusions
+
+The random forest predicted summer land surface temperature in unseen areas with R² = 0.65 and MAE = 1.17 °C, slightly better than linear regression (R² = 0.62) and much better than NDVI alone (R² = 0.40). Built-up cover was by far the most important feature. The model identifies patterns in the data but does not prove that trees cause lower temperatures; measuring the effect of planting trees requires a before-and-after experiment.
