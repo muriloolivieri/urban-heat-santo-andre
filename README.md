@@ -17,6 +17,8 @@ Which urban areas of Santo André have the highest land surface temperatures in 
 | Landsat 8 and 9, Collection 2, Level 2 (`LANDSAT/LC08/C02/T1_L2`, `LANDSAT/LC09/C02/T1_L2`) | USGS / NASA, via Google Earth Engine | Land surface temperature (band `ST_B10`) and NDVI (bands `SR_B4`, `SR_B5`) |
 | Malha Municipal 2025, state of São Paulo (`SP_Municipios_2025`) | IBGE, Brazilian Institute of Geography and Statistics | Official municipal boundary of Santo André |
 | Neighbourhood boundaries with 2022 Census counts (`BR_bairros_CD2022`) | IBGE, 2022 Census | Neighbourhood limits and number of residents (`v0001`) |
+| ESA WorldCover 2021 (`ESA/WorldCover/v200`) | European Space Agency | Tree cover and built-up cover within 50 m (machine learning features) |
+| SRTM digital elevation model (`USGS/SRTMGL1_003`) | NASA / USGS | Elevation (machine learning feature) |
 
 ## Methods
 
@@ -26,6 +28,7 @@ Which urban areas of Santo André have the highest land surface temperatures in 
 4. **Sampling and statistics.** 2,000 random 30 m pixels were sampled (fixed seed = 42). For each sample, the Pearson correlation between NDVI and land surface temperature was calculated, as well as the mean temperature in three vegetation classes: low (NDVI 0–0.2), medium (0.2–0.6) and dense (≥ 0.6). Water pixels (NDVI < 0) were excluded from the class means.
 5. **Validation of dense vegetation areas.** Pixels with NDVI ≥ 0.6 were mapped over a satellite basemap and inspected visually to check whether they correspond to urban parks or to forest outside the city.
 6. **Neighbourhood analysis.** For each of the 113 IBGE neighbourhoods of Santo André, the mean summer land surface temperature, mean NDVI and share of dense vegetation were calculated. The 87 urban neighbourhoods (centre inside the northern urban area) were ranked by temperature and combined with the number of residents from the 2022 Census.
+7. **Machine learning model.** 7,956 random pixels of the urban area (water removed) were exported with summer land surface temperature (target) and seven features: NDVI, NDBI, albedo, elevation, distance to the nearest dense vegetation, and tree cover and built-up cover within 50 m. Linear regression and a random forest were compared using **spatial cross-validation**: the city was divided into blocks of about 1 km, and the models were always tested on blocks they had not seen during training. Feature importance was measured by permutation, and partial dependence plots were used to see how predicted temperature changes with each feature.
 
 ## Why it matters
 
@@ -51,6 +54,7 @@ Temperatures are **land surface temperatures** at the time of the Landsat overpa
 - The effect is strongest when heat is most dangerous: in summer, NDVI explains about 50% of the variation in surface temperature (r = −0.71, p < 0.001), against about 30% over 2026 (r = −0.55), and the temperature difference is almost twice as large (6.1 °C vs 3.2 °C).
 - **Dense vegetation matters most.** In all four analyses, moving from low to medium vegetation lowered the mean temperature by only about 0.6–1.2 °C, while moving from medium to dense vegetation lowered it by about 2.7–5.7 °C.
 - Dense vegetation covers only about 11% (≈ 720–750 ha) of the analysed urban area, and it corresponds mainly to parks and well-vegetated areas within the city.
+- **Machine learning:** a random forest predicted summer land surface temperature in areas it had never seen with R² = 0.65 and a mean absolute error of 1.17 °C (spatial cross-validation). Built-up cover was by far the most important feature. A random (non-spatial) cross-validation would have overestimated performance (R² = 0.75), because nearby pixels are very similar.
 
 **Neighbourhoods with the most residents among the hottest 25%** (candidate priorities for tree planting; full tables in [`results/results.md`](results/results.md)):
 
@@ -72,12 +76,14 @@ Temperatures are **land surface temperatures** at the time of the Landsat overpa
 - The 2026 analysis covers January to September only, so it contains more cool-season images than a full year would.
 - IBGE neighbourhood boundaries may differ from the names and limits residents use. One urban neighbourhood (the Capuava petrochemical complex) has no population data in the Census file (IBGE code "."); it was kept in the temperature ranking and left out of population totals.
 - Differences of a few tenths of a degree between neighbourhoods are within the uncertainty of the satellite measurement, so the hottest neighbourhoods should be read as a group rather than as an exact order.
+- The machine learning model learns associations, not causes. Tree cover, built-up cover and NDVI carry similar information, which makes it hard to separate their individual effects. WorldCover (2021) is older than the Landsat images (2023–2026), and the model was tested only in Santo André.
 
 ## How to reproduce
 
 1. Create a free, non-commercial Google Earth Engine account at [earthengine.google.com](https://earthengine.google.com).
 2. For scripts 03 and 04, download `SP_Municipios_2025.zip` from the [IBGE download server](https://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2025/UFs/SP/), upload it as a table asset in the Earth Engine Code Editor (Assets → New → Shape files), and replace the asset path at the top of the script. For scripts 05 and 06, do the same with `BR_bairros_CD2022.zip` from the [IBGE 2022 Census server](https://ftp.ibge.gov.br/Censos/Censo_Demografico_2022/Agregados_por_Setores_Censitarios/malha_com_atributos/bairros/shp/BR/).
 3. Paste a script from the [`scripts`](scripts) folder into the [Code Editor](https://code.earthengine.google.com) and click **Run**.
+4. For the machine learning model, run script 07 and export the CSV to Google Drive (Tasks tab), then open [`notebooks/08_urban_heat_model.ipynb`](notebooks/08_urban_heat_model.ipynb) in [Google Colab](https://colab.research.google.com) and run all cells.
 
 ## Repository structure
 
@@ -90,6 +96,9 @@ scripts/
   05_neighbourhood_ranking_summer.js   all 113 neighbourhoods, summer ranking
   06_urban_neighbourhood_ranking_population.js
                                        87 urban neighbourhoods + population (current)
+  07_ml_dataset_export.js              machine learning dataset (CSV export)
+notebooks/
+  08_urban_heat_model.ipynb            machine learning model (Google Colab)
 results/
   results.md                           full numerical results
 research-log/
@@ -103,6 +112,8 @@ research-log/
 - Install low-cost air temperature sensors in different neighbourhoods during the 2026–2027 summer and compare them with the satellite data.
 - Measure surface temperatures of different materials (asphalt, concrete, grass, tree shade) with an infrared thermometer.
 - Turn the neighbourhood ranking into a priority map for urban tree planting and share it with the city government.
+- Use the model to simulate a realistic intervention: replacing built-up cover with trees (changing both features together), for example in my school's playground.
+- Repeat the permutation importance on all five spatial folds and average the results.
 
 ## Author
 
